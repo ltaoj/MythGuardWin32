@@ -136,7 +136,7 @@ public:
 		// Clear input buffer and line
 		memset(m_szLine, 0, (MAX_PATH) * sizeof(m_szLine[0]));
 		m_wsLine.clear();
-
+		
 		// Preface time stamp, if requested
 		if (m_bTimeStamp)
 		{

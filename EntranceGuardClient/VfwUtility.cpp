@@ -359,6 +359,34 @@ LRESULT CALLBACK VideoStreamCallback(HWND hwndC, LPVIDEOHDR lpVHdr)
 	return (0);
 }
 
+// 这里添加对每一帧的处理
+LRESULT PASCAL FrameCallbackProc(HWND hWnd, LPVIDEOHDR lpVHdr)
+{
+	//
+	// Process Video Callbacks Here!!
+	// (We get a pointer to the video buffer)
+	//
+	winLog.writelog(_T("Video callback, captured %d seconds"), lpVHdr->dwTimeCaptured / 1000);
+	// Sleep so other thread can access the winLog
+	SleepEx(1000, TRUE);
+
+	HDRAWDIB hDrawDib;
+	hDrawDib = DrawDibOpen();
+	if (hDrawDib)
+	{
+		HDC hdc = GetDC(hWnd);
+		
+		RECT rc = { 0 };
+		GetWindowRect(hWnd, &rc);
+		LPBITMAPINFOHEADER lpbi = { 0 };
+		capGetVideoFormat(hWnd, &lpbi, sizeof(lpbi));	
+		DrawDibDraw(hDrawDib, hdc, rc.left + 5, rc.top + 5, rc.right-rc.left - 5, rc.bottom-rc.top - 5,
+			lpbi,lpVHdr->lpData, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, DDF_UPDATE);
+		DrawDibClose(hDrawDib);
+	}
+	return (LRESULT)TRUE;
+}
+
 // Process all the Vfw Video commands
 void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 {
@@ -468,7 +496,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 
 		// Set the video stream callback function (we don't use this, but we could)
 		bSucceed = capSetCallbackOnVideoStream(hWndCapChild, VideoStreamCallback);
-
+		bSucceed = capSetCallbackOnFrame(hWndCapChild, FrameCallbackProc);
 		// Create an event for the capture thread to indicate that it's done 
 		// (Decided not to use semaphores - instead, the capture thread polls)
 		//g_hCapEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
