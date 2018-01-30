@@ -4,11 +4,13 @@
 //
 
 #include "stdafx.h"
+#include "VfwUtility.h"
 
-extern WinLogger winLog;	// debugging output log object
+// extern WinLogger winLog;	// debugging output log object
 
+// static HWND			hWndCapTrans = NULL;
 							// Return string corresponding to TRUE or FALSE
-TCHAR *TrueOrFalse(BOOL bTF)
+TCHAR * VfwUtility::TrueOrFalse(BOOL bTF)
 {
 	if (TRUE == bTF)
 	{
@@ -34,28 +36,28 @@ TCHAR *TrueOrFalse(BOOL bTF)
 //    HANDLE      hVideoExtOut;               // Driver Ext Out channel
 //} CAPDRIVERCAPS, *PCAPDRIVERCAPS, FAR *LPCAPDRIVERCAPS;
 //
-BOOL dumpCAPDRIVERCAPS(PCAPDRIVERCAPS pCaps)
+BOOL VfwUtility::dumpCAPDRIVERCAPS(PCAPDRIVERCAPS pCaps)
 {
 	// Check pointer is valid
 	if (NULL == pCaps)
 	{
 		return FALSE;
 	}
-	winLog.writelog(_T("CAPDRIVERCAPS :"));
-	winLog.writelog(_T("wDeviceIndex;                   0x%.4x     // Driver index in system.ini "), pCaps->wDeviceIndex);
-	winLog.writelog(_T("fHasOverlay;                    %s      // Can device overlay?        "), TrueOrFalse(pCaps->fHasOverlay));
-	winLog.writelog(_T("fHasDlgVideoSource;             %s      // Has Video source dlg?      "), TrueOrFalse(pCaps->fHasDlgVideoSource));
-	winLog.writelog(_T("fHasDlgVideoFormat;             %s      // Has Format dlg?            "), TrueOrFalse(pCaps->fHasDlgVideoFormat));
-	winLog.writelog(_T("fHasDlgVideoDisplay;            %s      // Has External out dlg?      "), TrueOrFalse(pCaps->fHasDlgVideoDisplay));
-	winLog.writelog(_T("fCaptureInitialized;            %s      // Driver ready to capture?   "), TrueOrFalse(pCaps->fCaptureInitialized));
-	winLog.writelog(_T("fDriverSuppliesPalettes;        %s      // Can driver make palettes?  "), TrueOrFalse(pCaps->fDriverSuppliesPalettes));
-	winLog.writelog(_T(""));
-	winLog.writelog(_T("The following are always NULL on Win32"));
-	winLog.writelog(_T("hVideoIn;                       0x%.4x     // Driver In channel          "), pCaps->hVideoIn);
-	winLog.writelog(_T("hVideoOut;                      0x%.4x     // Driver Out channel         "), pCaps->hVideoOut);
-	winLog.writelog(_T("hVideoExtIn;                    0x%.4x     // Driver Ext In channel      "), pCaps->hVideoExtIn);
-	winLog.writelog(_T("hVideoExtOut;                   0x%.4x     // Driver Ext Out channel     "), pCaps->hVideoExtOut);
-	winLog.writelog(_T(""));
+	winLog->writelog(_T("CAPDRIVERCAPS :"));
+	winLog->writelog(_T("wDeviceIndex;                   0x%.4x     // Driver index in system.ini "), pCaps->wDeviceIndex);
+	winLog->writelog(_T("fHasOverlay;                    %s      // Can device overlay?        "), TrueOrFalse(pCaps->fHasOverlay));
+	winLog->writelog(_T("fHasDlgVideoSource;             %s      // Has Video source dlg?      "), TrueOrFalse(pCaps->fHasDlgVideoSource));
+	winLog->writelog(_T("fHasDlgVideoFormat;             %s      // Has Format dlg?            "), TrueOrFalse(pCaps->fHasDlgVideoFormat));
+	winLog->writelog(_T("fHasDlgVideoDisplay;            %s      // Has External out dlg?      "), TrueOrFalse(pCaps->fHasDlgVideoDisplay));
+	winLog->writelog(_T("fCaptureInitialized;            %s      // Driver ready to capture?   "), TrueOrFalse(pCaps->fCaptureInitialized));
+	winLog->writelog(_T("fDriverSuppliesPalettes;        %s      // Can driver make palettes?  "), TrueOrFalse(pCaps->fDriverSuppliesPalettes));
+	winLog->writelog(_T(""));
+	winLog->writelog(_T("The following are always NULL on Win32"));
+	winLog->writelog(_T("hVideoIn;                       0x%.4x     // Driver In channel          "), pCaps->hVideoIn);
+	winLog->writelog(_T("hVideoOut;                      0x%.4x     // Driver Out channel         "), pCaps->hVideoOut);
+	winLog->writelog(_T("hVideoExtIn;                    0x%.4x     // Driver Ext In channel      "), pCaps->hVideoExtIn);
+	winLog->writelog(_T("hVideoExtOut;                   0x%.4x     // Driver Ext Out channel     "), pCaps->hVideoExtOut);
+	winLog->writelog(_T(""));
 
 	return TRUE;
 }
@@ -82,37 +84,37 @@ BOOL dumpCAPDRIVERCAPS(PCAPDRIVERCAPS pCaps)
 //    UINT        wNumAudioAllocated;         // Actual number of audio buffers
 //} CAPSTATUS, *PCAPSTATUS, FAR *LPCAPSTATUS;
 //
-BOOL dumpCAPSTATUS(PCAPSTATUS pCaps)
+BOOL VfwUtility::dumpCAPSTATUS(PCAPSTATUS pCaps)
 {
 	// Check pointer is valid
 	if (NULL == pCaps)
 	{
 		return FALSE;
 	}
-	winLog.writelog(_T("CAPSTATUS :"));
-	winLog.writelog(_T("uiImageWidth;             %.4d  0x%.4x   // Width of the image "), pCaps->uiImageWidth);
-	winLog.writelog(_T("uiImageHeight;            %.4d  0x%.4x   // Height of the image "), pCaps->uiImageHeight);
-	winLog.writelog(_T("fLiveWindow;                    %s      // Now Previewing video?"), TrueOrFalse(pCaps->fLiveWindow));
-	winLog.writelog(_T("fOverlayWindow;                 %s      // Now Overlaying video?"), TrueOrFalse(pCaps->fOverlayWindow));
-	winLog.writelog(_T("fScale;                         %s      // Scale image to client?"), TrueOrFalse(pCaps->fScale));
-	winLog.writelog(_T("ptScroll;               x: %.4d y: %.4d    // Scroll position"), pCaps->ptScroll.x, pCaps->ptScroll.y);
-	winLog.writelog(_T("fUsingDefaultPalette;           %s      // Using default driver palette?"), TrueOrFalse(pCaps->fUsingDefaultPalette));
-	winLog.writelog(_T("fAudioHardware;                 %s      // Audio hardware present?"), TrueOrFalse(pCaps->fAudioHardware));
-	winLog.writelog(_T("fCapFileExists;                 %s      // Does capture file exist?"), TrueOrFalse(pCaps->fCapFileExists));
-	winLog.writelog(_T("dwCurrentVideoFrame;      %.4d  0x%.4x     // # of video frames cap'td "),
+	winLog->writelog(_T("CAPSTATUS :"));
+	winLog->writelog(_T("uiImageWidth;             %.4d  0x%.4x   // Width of the image "), pCaps->uiImageWidth);
+	winLog->writelog(_T("uiImageHeight;            %.4d  0x%.4x   // Height of the image "), pCaps->uiImageHeight);
+	winLog->writelog(_T("fLiveWindow;                    %s      // Now Previewing video?"), TrueOrFalse(pCaps->fLiveWindow));
+	winLog->writelog(_T("fOverlayWindow;                 %s      // Now Overlaying video?"), TrueOrFalse(pCaps->fOverlayWindow));
+	winLog->writelog(_T("fScale;                         %s      // Scale image to client?"), TrueOrFalse(pCaps->fScale));
+	winLog->writelog(_T("ptScroll;               x: %.4d y: %.4d    // Scroll position"), pCaps->ptScroll.x, pCaps->ptScroll.y);
+	winLog->writelog(_T("fUsingDefaultPalette;           %s      // Using default driver palette?"), TrueOrFalse(pCaps->fUsingDefaultPalette));
+	winLog->writelog(_T("fAudioHardware;                 %s      // Audio hardware present?"), TrueOrFalse(pCaps->fAudioHardware));
+	winLog->writelog(_T("fCapFileExists;                 %s      // Does capture file exist?"), TrueOrFalse(pCaps->fCapFileExists));
+	winLog->writelog(_T("dwCurrentVideoFrame;      %.4d  0x%.4x     // # of video frames cap'td "),
 		pCaps->dwCurrentVideoFrame, pCaps->dwCurrentVideoFrame);
-	winLog.writelog(_T("dwCurrentVideoFramesDropped;    0x%.4x     // # of video frames dropped "), pCaps->dwCurrentVideoFramesDropped);
-	winLog.writelog(_T("dwCurrentWaveSamples;           0x%.8x // # of wave samples cap'td "), pCaps->dwCurrentWaveSamples);
-	winLog.writelog(_T("dwCurrentTimeElapsedMS;         0x%.8x // Elapsed capture duration "), pCaps->dwCurrentTimeElapsedMS);               // Milliseconds, hex
-	winLog.writelog(_T("dwCurrentTimeElapsedMS;         %.2d:%.2d:%.3d  // Elapsed capture duration "),
+	winLog->writelog(_T("dwCurrentVideoFramesDropped;    0x%.4x     // # of video frames dropped "), pCaps->dwCurrentVideoFramesDropped);
+	winLog->writelog(_T("dwCurrentWaveSamples;           0x%.8x // # of wave samples cap'td "), pCaps->dwCurrentWaveSamples);
+	winLog->writelog(_T("dwCurrentTimeElapsedMS;         0x%.8x // Elapsed capture duration "), pCaps->dwCurrentTimeElapsedMS);               // Milliseconds, hex
+	winLog->writelog(_T("dwCurrentTimeElapsedMS;         %.2d:%.2d:%.3d  // Elapsed capture duration "),
 		pCaps->dwCurrentTimeElapsedMS / (1000 * 60), pCaps->dwCurrentTimeElapsedMS / (100 * 60),  // Minutes, seconds
 		pCaps->dwCurrentTimeElapsedMS % 1000);               // Milliseconds
-	winLog.writelog(_T("hPalCurrent;                    0x%.8x // Current palette in use"), pCaps->hPalCurrent);
-	winLog.writelog(_T("fCapturingNow;                  %s      // Capture in progress?"), TrueOrFalse(pCaps->fCapturingNow));
-	winLog.writelog(_T("dwReturn;                       0x%.4x     // Error value after any operation "), pCaps->dwReturn);
-	winLog.writelog(_T("wNumVideoAllocated;             0x%.4x     // Actual number of video buffers "), pCaps->wNumVideoAllocated);
-	winLog.writelog(_T("wNumAudioAllocated;             0x%.4x     // Actual number of audio buffers "), pCaps->wNumAudioAllocated);
-	winLog.writelog(_T(""));
+	winLog->writelog(_T("hPalCurrent;                    0x%.8x // Current palette in use"), pCaps->hPalCurrent);
+	winLog->writelog(_T("fCapturingNow;                  %s      // Capture in progress?"), TrueOrFalse(pCaps->fCapturingNow));
+	winLog->writelog(_T("dwReturn;                       0x%.4x     // Error value after any operation "), pCaps->dwReturn);
+	winLog->writelog(_T("wNumVideoAllocated;             0x%.4x     // Actual number of video buffers "), pCaps->wNumVideoAllocated);
+	winLog->writelog(_T("wNumAudioAllocated;             0x%.4x     // Actual number of audio buffers "), pCaps->wNumAudioAllocated);
+	winLog->writelog(_T(""));
 
 	return TRUE;
 }
@@ -145,39 +147,39 @@ BOOL dumpCAPSTATUS(PCAPSTATUS pCaps)
 //    UINT        AVStreamMaster;             // Which stream controls length?
 //} CAPTUREPARMS, *PCAPTUREPARMS, FAR *LPCAPTUREPARMS;
 //
-BOOL dumpCAPTUREPARMS(PCAPTUREPARMS pCaps)
+BOOL VfwUtility::dumpCAPTUREPARMS(PCAPTUREPARMS pCaps)
 {
 	// Check pointer is valid
 	if (NULL == pCaps)
 	{
 		return FALSE;
 	}
-	winLog.writelog(_T("CAPTUREPARMS :"));
-	winLog.writelog(_T("dwRequestMicroSecPerFrame;      0x%.4x    // Requested capture rate"), pCaps->dwRequestMicroSecPerFrame);
-	winLog.writelog(_T("fMakeUserHitOKToCapture;        %s      // Show \"Hit OK to cap\" dlg?"), TrueOrFalse(pCaps->fMakeUserHitOKToCapture));
-	winLog.writelog(_T("wPercentDropForError;           0x%.4x     // Give error msg if > (10%%)"), pCaps->wPercentDropForError);
-	winLog.writelog(_T("fYield;                         %s      // Capture via background task?"), TrueOrFalse(pCaps->fYield));
-	winLog.writelog(_T("dwIndexSize;                    0x%.4x     // Max index size in frames (32K)"), pCaps->dwIndexSize);
-	winLog.writelog(_T("wChunkGranularity;              0x%.4x     // Junk chunk granularity (2K)"), pCaps->wChunkGranularity);
-	winLog.writelog(_T("fUsingDOSMemory;                %s      // Use DOS buffers?"), TrueOrFalse(pCaps->fUsingDOSMemory));
-	winLog.writelog(_T("wNumVideoRequested;             0x%.4x     // # video buffers, If 0, autocalc"), pCaps->wNumVideoRequested);
-	winLog.writelog(_T("fCaptureAudio;                  %s      // Capture audio?"), TrueOrFalse(pCaps->fCaptureAudio));
-	winLog.writelog(_T("wNumAudioRequested;             0x%.4x     // # audio buffers, If 0, autocalc"), pCaps->wNumAudioRequested);
-	winLog.writelog(_T("vKeyAbort;                      0x%.4x     // Virtual key causing abort"), pCaps->vKeyAbort);
-	winLog.writelog(_T("fAbortLeftMouse;                %s      // Abort on left mouse?"), TrueOrFalse(pCaps->fAbortLeftMouse));
-	winLog.writelog(_T("fAbortRightMouse;               %s      // Abort on right mouse?"), TrueOrFalse(pCaps->fAbortRightMouse));
-	winLog.writelog(_T("fLimitEnabled;                  %s      // Use wTimeLimit?"), TrueOrFalse(pCaps->fLimitEnabled));
-	winLog.writelog(_T("wTimeLimit;                     0x%.4x     // Seconds to capture"), pCaps->wTimeLimit);
-	winLog.writelog(_T("fMCIControl;                    %s      // Use MCI video source?"), TrueOrFalse(pCaps->fMCIControl));
-	winLog.writelog(_T("fStepMCIDevice;                 %s      // Step MCI device?"), TrueOrFalse(pCaps->fStepMCIDevice));
-	winLog.writelog(_T("dwMCIStartTime;                 0x%.4x     // Time to start in MS"), pCaps->dwMCIStartTime);
-	winLog.writelog(_T("dwMCIStopTime;                  0x%.4x     // Time to stop in MS"), pCaps->dwMCIStopTime);
-	winLog.writelog(_T("fStepCaptureAt2x;               %s      // Perform spatial averaging 2x"), TrueOrFalse(pCaps->fStepCaptureAt2x));
-	winLog.writelog(_T("wStepCaptureAverageFrames;      0x%.4x     // Temporal average n Frames"), pCaps->wStepCaptureAverageFrames);
-	winLog.writelog(_T("dwAudioBufferSize;              0x%.4x     // Size of audio bufs (0 = default)"), pCaps->dwAudioBufferSize);
-	winLog.writelog(_T("fDisableWriteCache;             %s      // Attempt to disable write cache"), TrueOrFalse(pCaps->fDisableWriteCache));
-	winLog.writelog(_T("AVStreamMaster;                 0x%.4x     // Which stream controls length?"), pCaps->AVStreamMaster);
-	winLog.writelog(_T(""));
+	winLog->writelog(_T("CAPTUREPARMS :"));
+	winLog->writelog(_T("dwRequestMicroSecPerFrame;      0x%.4x    // Requested capture rate"), pCaps->dwRequestMicroSecPerFrame);
+	winLog->writelog(_T("fMakeUserHitOKToCapture;        %s      // Show \"Hit OK to cap\" dlg?"), TrueOrFalse(pCaps->fMakeUserHitOKToCapture));
+	winLog->writelog(_T("wPercentDropForError;           0x%.4x     // Give error msg if > (10%%)"), pCaps->wPercentDropForError);
+	winLog->writelog(_T("fYield;                         %s      // Capture via background task?"), TrueOrFalse(pCaps->fYield));
+	winLog->writelog(_T("dwIndexSize;                    0x%.4x     // Max index size in frames (32K)"), pCaps->dwIndexSize);
+	winLog->writelog(_T("wChunkGranularity;              0x%.4x     // Junk chunk granularity (2K)"), pCaps->wChunkGranularity);
+	winLog->writelog(_T("fUsingDOSMemory;                %s      // Use DOS buffers?"), TrueOrFalse(pCaps->fUsingDOSMemory));
+	winLog->writelog(_T("wNumVideoRequested;             0x%.4x     // # video buffers, If 0, autocalc"), pCaps->wNumVideoRequested);
+	winLog->writelog(_T("fCaptureAudio;                  %s      // Capture audio?"), TrueOrFalse(pCaps->fCaptureAudio));
+	winLog->writelog(_T("wNumAudioRequested;             0x%.4x     // # audio buffers, If 0, autocalc"), pCaps->wNumAudioRequested);
+	winLog->writelog(_T("vKeyAbort;                      0x%.4x     // Virtual key causing abort"), pCaps->vKeyAbort);
+	winLog->writelog(_T("fAbortLeftMouse;                %s      // Abort on left mouse?"), TrueOrFalse(pCaps->fAbortLeftMouse));
+	winLog->writelog(_T("fAbortRightMouse;               %s      // Abort on right mouse?"), TrueOrFalse(pCaps->fAbortRightMouse));
+	winLog->writelog(_T("fLimitEnabled;                  %s      // Use wTimeLimit?"), TrueOrFalse(pCaps->fLimitEnabled));
+	winLog->writelog(_T("wTimeLimit;                     0x%.4x     // Seconds to capture"), pCaps->wTimeLimit);
+	winLog->writelog(_T("fMCIControl;                    %s      // Use MCI video source?"), TrueOrFalse(pCaps->fMCIControl));
+	winLog->writelog(_T("fStepMCIDevice;                 %s      // Step MCI device?"), TrueOrFalse(pCaps->fStepMCIDevice));
+	winLog->writelog(_T("dwMCIStartTime;                 0x%.4x     // Time to start in MS"), pCaps->dwMCIStartTime);
+	winLog->writelog(_T("dwMCIStopTime;                  0x%.4x     // Time to stop in MS"), pCaps->dwMCIStopTime);
+	winLog->writelog(_T("fStepCaptureAt2x;               %s      // Perform spatial averaging 2x"), TrueOrFalse(pCaps->fStepCaptureAt2x));
+	winLog->writelog(_T("wStepCaptureAverageFrames;      0x%.4x     // Temporal average n Frames"), pCaps->wStepCaptureAverageFrames);
+	winLog->writelog(_T("dwAudioBufferSize;              0x%.4x     // Size of audio bufs (0 = default)"), pCaps->dwAudioBufferSize);
+	winLog->writelog(_T("fDisableWriteCache;             %s      // Attempt to disable write cache"), TrueOrFalse(pCaps->fDisableWriteCache));
+	winLog->writelog(_T("AVStreamMaster;                 0x%.4x     // Which stream controls length?"), pCaps->AVStreamMaster);
+	winLog->writelog(_T(""));
 
 	return TRUE;
 }
@@ -185,7 +187,7 @@ BOOL dumpCAPTUREPARMS(PCAPTUREPARMS pCaps)
 // Set Capture filename
 // Default is current directory plus "VfwCap00.avi", with subsequent captures sequentially incremented
 //
-BOOL SetCaptureFilename(HWND hWnd, HWND hWndCap, TCHAR *szCapFilename, int *nCapFileIndex)
+BOOL VfwUtility::SetCaptureFilename(HWND hWnd, HWND hWndCap, TCHAR *szCapFilename, int *nCapFileIndex)
 {
 	// Get the base current directory
 	TCHAR pPath[MAX_PATH + 1] = { 0 };
@@ -232,7 +234,7 @@ BOOL SetCaptureFilename(HWND hWnd, HWND hWndCap, TCHAR *szCapFilename, int *nCap
 // Set DIB filename
 // Default is current directory plus "VfwDIB00.dib", with subsequent captures sequentially incremented
 //
-BOOL SetCapDIBFilename(HWND hWnd, TCHAR *szCapFilename, int *nCapFileIndex)
+BOOL VfwUtility::SetCapDIBFilename(HWND hWnd, TCHAR *szCapFilename, int *nCapFileIndex)
 {
 	// Get the base current directory
 	TCHAR pPath[MAX_PATH + 1] = { 0 };
@@ -286,12 +288,12 @@ unsigned __stdcall	ShowCaptureStatusThread(void *args)
 	{
 		if (capGetStatus(*hWndCapChild, &capStatus, sizeof(CAPSTATUS)))
 		{
-			winLog.writelog(_T("fCapturingNow;                  %s      // Capture in progress?"),
+			/*winLog->writelog(_T("fCapturingNow;                  %s      // Capture in progress?"),
 				TrueOrFalse(capStatus.fCapturingNow));
-			winLog.writelog(_T("dwCurrentVideoFrame;      %.4d  0x%.4x     // # of video frames cap'td "),
+			winLog->writelog(_T("dwCurrentVideoFrame;      %.4d  0x%.4x     // # of video frames cap'td "),
 				capStatus.dwCurrentVideoFrame, capStatus.dwCurrentVideoFrame);
-			winLog.writelog(_T("dwCurrentVideoFramesDropped;    0x%.4x     // # of video frames dropped "),
-				capStatus.dwCurrentVideoFramesDropped);
+			winLog->writelog(_T("dwCurrentVideoFramesDropped;    0x%.4x     // # of video frames dropped "),
+				capStatus.dwCurrentVideoFramesDropped);*/
 
 		}
 		// Wait for 1 second and exit if we're not capturing anymore
@@ -324,7 +326,7 @@ LRESULT CALLBACK CapWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 // This function resizes the capture window based upon the Video Capture
 // parameters found in the capStatus structure returned from Win32
 // 
-void ResizeCaptureWindow(HWND hWndChild, HWND hWndCap)
+void VfwUtility::ResizeCaptureWindow(HWND hWndChild, HWND hWndCap)
 {
 	CAPSTATUS    capStatus = { 0 };
 
@@ -352,7 +354,7 @@ LRESULT CALLBACK VideoStreamCallback(HWND hwndC, LPVIDEOHDR lpVHdr)
 	// Process Video Callbacks Here!!
 	// (We get a pointer to the video buffer)
 	//
-	winLog.writelog(_T("Video callback, captured %d seconds"), lpVHdr->dwTimeCaptured / 1000);
+	// winLog->writelog(_T("Video callback, captured %d seconds"), lpVHdr->dwTimeCaptured / 1000);
 	// Sleep so other thread can access the winLog
 	SleepEx(1000, TRUE);
 
@@ -366,11 +368,11 @@ LRESULT PASCAL FrameCallbackProc(HWND hWnd, LPVIDEOHDR lpVHdr)
 	// Process Video Callbacks Here!!
 	// (We get a pointer to the video buffer)
 	//
-	winLog.writelog(_T("Video callback, captured %d seconds"), lpVHdr->dwTimeCaptured / 1000);
+	// winLog->writelog(_T("Video callback, captured %d seconds"), lpVHdr->dwTimeCaptured / 1000);
 	// Sleep so other thread can access the winLog
-	SleepEx(1000, TRUE);
+	// SleepEx(1000, TRUE);
 
-	HDRAWDIB hDrawDib;
+	/*HDRAWDIB hDrawDib;
 	hDrawDib = DrawDibOpen();
 	if (hDrawDib)
 	{
@@ -378,17 +380,56 @@ LRESULT PASCAL FrameCallbackProc(HWND hWnd, LPVIDEOHDR lpVHdr)
 		
 		RECT rc = { 0 };
 		GetWindowRect(hWnd, &rc);
-		LPBITMAPINFOHEADER lpbi = { 0 };
-		capGetVideoFormat(hWnd, &lpbi, sizeof(lpbi));	
+		BITMAPINFO  bmpInfo;
+		capGetVideoFormat(hWnd, &bmpInfo, sizeof(bmpInfo));
 		DrawDibDraw(hDrawDib, hdc, rc.left + 5, rc.top + 5, rc.right-rc.left - 5, rc.bottom-rc.top - 5,
-			lpbi,lpVHdr->lpData, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, DDF_UPDATE);
+			&(bmpInfo.bmiHeader),lpVHdr->lpData, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, DDF_UPDATE);
 		DrawDibClose(hDrawDib);
-	}
+	}*/
+	/*RECT rc = { 0 };
+	GetWindowRect(hWnd, &rc);
+	PAINTSTRUCT ps;
+	BeginPaint(hWnd, &ps);
+	SetTextColor(ps.hdc, RGB(10, 0, 255));
+	DrawText(ps.hdc, L"朋友，你好。", -1, &(ps.rcPaint), DT_CENTER);
+	Rectangle(ps.hdc, rc.left + 5, rc.top + 5, rc.right - 5, rc.bottom - 5);
+	EndPaint(hWnd, &ps);*/
+
+	/*HDC hDC = GetDC(hWndCapTrans);
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP m_hBitmap = CreateCompatibleBitmap(hDC, 800, 600);
+
+	RECT rect;
+	GetClientRect(hWndCapTrans, &rect);
+
+	HBITMAP hOldBitmap = (HBITMAP)SelectObject(hMemDC, m_hBitmap);
+
+	HDRAWDIB hDib = DrawDibOpen();
+
+	BITMAPINFO m_bmpInfo;
+	capGetVideoFormat(hWnd, &m_bmpInfo, lpVHdr->dwBytesUsed);
+	// 参数m_bmpInfo是通过视频采集函数capGetVideoFormat得到的位图格式. 
+	DrawDibDraw(hDib, hMemDC,
+		0, 0, rect.right, rect.bottom,
+		&(m_bmpInfo.bmiHeader), (LPVOID)lpVHdr->lpData,
+		0, 0, m_bmpInfo.bmiHeader.biWidth, m_bmpInfo.bmiHeader.biHeight,
+		DDF_NOTKEYFRAME);
+
+	HPEN hPen = CreatePen(PS_SOLID, 10, RGB(255, 0, 0));
+	SelectObject(hDC, &hPen);             
+
+	int i = 20;
+	MoveToEx(hDC, 10 + i, 10 + i, NULL);
+	LineTo(hDC, 110 + i, 10 + i);
+	LineTo(hDC, 110 + i, 110 + i);
+	LineTo(hDC, 10 + i, 110 + i);
+	LineTo(hDC, 10 + i, 10 + i);*/
+
 	return (LRESULT)TRUE;
 }
 
 // Process all the Vfw Video commands
-void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
+void VfwUtility::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 {
 	BOOL				bSucceed = FALSE;
 	HINSTANCE			hInst = NULL;
@@ -398,6 +439,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 	static int			nCapDIBFileIndex = 0;		// Capture DIB file sequential name counter
 	static HWND			hWndCap = NULL;				// Handle to the Preview Window parent
 	static HWND			hWndCapChild = NULL;		// Handle to the Preview Window
+	// static HWND			hWndCapTrans = NULL;		// Handle to the Preview Window Transparent for paint
 	unsigned int		threadID = 0;				// ID of the Capture helper thread
 	static uintptr_t	hCapThread = NULL;			// Handle to the Capture helper thread
 
@@ -407,7 +449,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		// This command enumerates video devices and loads one
 		// If that succeeds, then it enables the menu items for device functionality
 		// 
-		winLog.writelog(_T("Capture start - Video for Windows version 0x%x %x"),
+		winLog->writelog(_T("Capture start - Video for Windows version 0x%x %x"),
 			HIWORD(VideoForWindowsVersion()), LOWORD(VideoForWindowsVersion()));
 
 		// Get the title and class for our Capture window
@@ -417,7 +459,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		if ((NULL == szStringOne) || (NULL == szStringTwo))
 		{
 			DWORD dwError = GetLastError();
-			winLog.writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
+			winLog->writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
 			break;
 		}
 		memset(szStringOne, 0, MAX_PATH * sizeof(szStringOne[0]));
@@ -442,11 +484,15 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 			WS_CHILD | WS_VISIBLE,
 			0, 0, 0, 0,
 			hWndCap, CAP_WINDOW_ID);	// hWndParent, hMenu
+
+		/*hWndCapTrans = CreateWindowEx(WS_EX_LAYERED, szStringOne, szStringTwo, WS_POPUP | WS_VISIBLE, 0, 0, 0, 0, hWndCap, NULL, hInst, 0);
+		SetLayeredWindowAttributes(hWndCapTrans, 0, 1, LWA_ALPHA);*/
+
 										// Check for creation failure of either window 
 		if ((NULL == hWndCapChild) || (NULL == hWndCap))
 		{
 			DWORD dwError = GetLastError();
-			winLog.writelog(_T("ERROR: capCreateCaptureWindow - Last Error 0x%.4x"), dwError);
+			winLog->writelog(_T("ERROR: capCreateCaptureWindow - Last Error 0x%.4x"), dwError);
 			break;
 		}
 
@@ -458,8 +504,8 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 				szStringOne, MAX_PATH,
 				szStringTwo, MAX_PATH))
 			{
-				winLog.writelog(_T("Vfw device : %s"), szStringOne);
-				winLog.writelog(_T("Version    : %s"), szStringTwo);
+				winLog->writelog(_T("Vfw device : %s"), szStringOne);
+				winLog->writelog(_T("Version    : %s"), szStringTwo);
 				break;
 			}
 		}
@@ -479,9 +525,9 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		if (FALSE == bSucceed)
 		{
 			DWORD dwError = GetLastError();
-			winLog.writelog(_T("ERROR: capDriverConnect - Last Error 0x%.4x"), dwError);
-			winLog.writelog(_T("capDriverConnect in Windows 7 Vfw will fail to load if there are multiple capture devices"));
-			winLog.writelog(_T(""));
+			winLog->writelog(_T("ERROR: capDriverConnect - Last Error 0x%.4x"), dwError);
+			winLog->writelog(_T("capDriverConnect in Windows 7 Vfw will fail to load if there are multiple capture devices"));
+			winLog->writelog(_T(""));
 			break;
 		}
 
@@ -491,8 +537,11 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		// Resize the capture window to show whole image
 		// Note that the Capture window is inside another window, so ask to show them both
 		ResizeCaptureWindow(hWndCap, hWndCapChild);
+		// ResizeCaptureWindow(hWndCapTrans, hWndCapChild);*/
+
 		ShowWindow(hWndCap, SW_SHOWNORMAL);
 		ShowWindow(hWndCapChild, SW_SHOWNORMAL);
+		// ShowWindow(hWndCapTrans, SW_SHOWNORMAL);
 
 		// Set the video stream callback function (we don't use this, but we could)
 		bSucceed = capSetCallbackOnVideoStream(hWndCapChild, VideoStreamCallback);
@@ -518,7 +567,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_CAP_RELEASE:
 		// This command releases the video device and disables the device specific menu items
-		winLog.writelog(_T("Capture driver release"));
+		winLog->writelog(_T("Capture driver release"));
 
 		// Shut off the video callback and preview, then release device
 		capSetCallbackOnVideoStream(hWndCapChild, NULL);
@@ -549,14 +598,14 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		if (NULL == szStringOne)
 		{
 			DWORD dwError = GetLastError();
-			winLog.writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
+			winLog->writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
 			break;
 		}
 		memset(szStringOne, 0, (MAX_PATH * sizeof(szStringOne[0])) + 1);
 
 		// What is is the current capture file?
 		bSucceed = capFileGetCaptureFile(hWndCapChild, szStringOne, MAX_PATH);
-		winLog.writelog(_T("Current capture file is %s"), szStringOne);
+		winLog->writelog(_T("Current capture file is %s"), szStringOne);
 
 		// Set Capture filename (starting at "VfwCap00.avi")
 		if (!SetCaptureFilename(hWnd, hWndCapChild, szStringOne, &nCapFileIndex))
@@ -564,14 +613,14 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 			break;
 		}
 		bSucceed = capFileGetCaptureFile(hWndCapChild, szStringOne, MAX_PATH);
-		winLog.writelog(_T("Now current capture file is %s"), szStringOne);
+		winLog->writelog(_T("Now current capture file is %s"), szStringOne);
 
 		// Set the capture parameters
 		{
 			CAPTUREPARMS captureParms = { 0 };
 			if (capCaptureGetSetup(hWndCapChild, &captureParms, sizeof(CAPTUREPARMS)))
 			{
-				winLog.writelog(_T("start capCaptureSequence to %s"), szStringOne);
+				winLog->writelog(_T("start capCaptureSequence to %s"), szStringOne);
 				// Use the OK to Capture dialog
 				captureParms.fMakeUserHitOKToCapture = TRUE;
 				captureParms.fYield = TRUE;
@@ -586,7 +635,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 			&hWndCapChild,					// arglist (address of Capture Window)
 			0,								// initflag (0 for running, CREATE_SUSPENDED for suspended)
 			&threadID);						// Thread identifier
-		winLog.writelog(_T("Capture thread ID is 0x%x"), threadID);
+		winLog->writelog(_T("Capture thread ID is 0x%x"), threadID);
 
 		// Start streaming capture to disk (Capture is terminated with ESC key)
 		bSucceed = capCaptureSequence(hWndCapChild);
@@ -606,7 +655,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		if (NULL == szStringOne)
 		{
 			DWORD dwError = GetLastError();
-			winLog.writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
+			winLog->writelog(_T("ERROR: memory allocation - Last Error 0x%.4x"), dwError);
 			break;
 		}
 		memset(szStringOne, 0, (MAX_PATH * sizeof(szStringOne[0])) + 1);
@@ -616,7 +665,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		{
 			break;
 		}
-		winLog.writelog(_T("capture a frame to %s"), szStringOne);
+		winLog->writelog(_T("capture a frame to %s"), szStringOne);
 
 		// Grab a single frame
 		bSucceed = capFileSaveDIB(hWndCapChild, szStringOne);
@@ -629,6 +678,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 	case ID_CAP_FORMAT:
 		bSucceed = capDlgVideoFormat(hWndCapChild);
 		ResizeCaptureWindow(hWndCap, hWndCapChild);
+		// ResizeCaptureWindow(hWndCapTrans, hWndCapChild);
 		break;
 	case ID_CAP_DISPLAY:
 		bSucceed = capDlgVideoDisplay(hWndCapChild);
@@ -694,7 +744,7 @@ void Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 }
 
 // Process all the Vfw Audio commands
-void Cls_OnAudioCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
+void VfwUtility::Cls_OnAudioCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 {
 	BOOL		bSucceed = TRUE;
 	HINSTANCE	hInst = NULL;
@@ -706,7 +756,7 @@ void Cls_OnAudioCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		// This draws the MCI control in the main UI window.
 		// Functional, but it looks sloppy!
 		// 
-		winLog.writelog(_T("MCI Create"));
+		winLog->writelog(_T("MCI Create"));
 		hInst = reinterpret_cast <HINSTANCE> (GetWindowLongPtr(hWnd, GWLP_HINSTANCE));
 		hWndMCI = MCIWndCreate(hWnd, hInst,
 			MCIWNDF_SHOWALL,
@@ -714,20 +764,20 @@ void Cls_OnAudioCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 	case ID_MCI_PLAY:
-		winLog.writelog(_T("MCI Play"));
+		winLog->writelog(_T("MCI Play"));
 		MCIWndPlay(hWndMCI);
 		break;
 	case ID_MCI_PAUSE:
-		winLog.writelog(_T("MCI Pause"));
+		winLog->writelog(_T("MCI Pause"));
 		MCIWndPause(hWndMCI);
 		break;
 	case ID_MCI_STOP:
-		winLog.writelog(_T("MCI Stop"));
+		winLog->writelog(_T("MCI Stop"));
 		MCIWndStop(hWndMCI);
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 	case ID_MCI_RELEASE:
-		winLog.writelog(_T("MCI Release"));
+		winLog->writelog(_T("MCI Release"));
 		MCIWndDestroy(hWndMCI);
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;

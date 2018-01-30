@@ -30,6 +30,18 @@
     <ClInclude Include="WinLogger.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CvManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VfwUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraContext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -39,6 +51,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="VfwUtility.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CvManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraContext.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WinLogger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
