@@ -24,10 +24,14 @@ using namespace cv;
 
 void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 {
+	BOOL				bSuccess = FALSE;
 	HINSTANCE			hInst = NULL;
 	TCHAR				*szStringOne = NULL;		// Two scratch strings
 	TCHAR				*szStringTwo = NULL;
-	VideoCapture cap;
+	VideoCapture		cap;
+	Mat					frame;						// 记录直接捕获的每一帧
+	Mat					result;						// 人脸识别、追踪处理过的画面帧
+	String				capWndName;					// 视频捕获窗口名称
    // TODO : implement
 	switch (id)
 	{
@@ -64,7 +68,42 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 				break;
 			}
 		}
+
+		// 连接驱动
+		// 如果有多个驱动那么只开启第一个连接成功的或者达到VFW限制的9个
+		// 可能没有连接成功
+		for (int capNum = 0; (FALSE == bSuccess) && (capNum < 9); ++capNum)
+		{
+			bSuccess = cap.open(capNum);
+		}
+
+		if (FALSE == bSuccess)
+		{
+			winLog->writelog(_T("ERROR! Unable to open camera"));
+			winLog->writelog(_T("capDriverConnect in Windows 7 Vfw will fail to load if there are multiple capture devices"));
+			winLog->writelog(_T(""));
+			break;
+		}
 		winLog->writelog(_T("Video Camera - Width: %x, Height: %x"),
 			cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT));
+
+		winLog->writelog(_T("开始捕获摄像头"));
+		winLog->writelog(_T("点击菜单Release选项终止捕获"));
+		
+		capWndName = "门禁摄像头捕获画面";
+		while (1)
+		{
+			// 读取帧
+			cap.read(frame);
+			if (frame.empty())
+				continue;
+
+			imshow(capWndName, frame);
+			char c = waitKey(10) & 0xFF;
+			if (c == ' ')
+				
+			if (c == 'q' || c == 'Q' || c == 27)
+				break;
+		}
 	}
 }

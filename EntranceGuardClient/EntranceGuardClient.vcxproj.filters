@@ -42,6 +42,24 @@
     <ClInclude Include="CameraContext.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FaceDetect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fd\amcomdef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fd\ammem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fd\arcsoft_fsdk_face_detection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fd\asvloffscreen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="fd\merror.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +81,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WinLogger.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceDetect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
