@@ -15,15 +15,6 @@ using std::wstring;
 class WinLogger
 {
 public:
-	// c'tor
-	WinLogger();
-	// d'tor
-	~WinLogger();
-	// Initialize the logfile with user provided name
-	// Default is module name with .txt extension
-	//
-	bool Init(const TCHAR *pOutputFilename, HINSTANCE hInstance);
-
 	// write to log using a resource string
 	// $$ Need to write this so that we don't repeat a lot of the TCHAR * writeLog
 	//   void writelog(const UINT uID, ...)
@@ -55,11 +46,23 @@ public:
 	// Get longest line length
 	size_t GetLongestLineLength();
 
+	static WinLogger* getInstance(const TCHAR* pOutputFilename, HINSTANCE hInstance);
+	static WinLogger* getInstance(void);
+
 protected:
 	// Add completed line to log, update iters and write to file if flag set
 	void AddLine();
 
 private:
+	// c'tor
+	WinLogger();
+	// d'tor
+	~WinLogger();
+	// Initialize the logfile with user provided name
+	// Default is module name with .txt extension
+	//
+	bool Init(const TCHAR *pOutputFilename, HINSTANCE hInstance);
+
 	vector<wstring> m_vsLog;            // vector of strings to hold log
 	wstring m_wsLine;                   // log input line
 	wstring m_wsEmpty;                  // empty string for out of range returns
@@ -83,6 +86,8 @@ private:
 	vector<wstring>::iterator iEnd;             // LAST element in array
 	vector<wstring>::reverse_iterator rBegin;   // LAST element in array
 	vector<wstring>::reverse_iterator rEnd;     // FIRST element in array
+
+	static WinLogger* m_winLog;
 };
 
 #endif

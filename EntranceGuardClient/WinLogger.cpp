@@ -8,6 +8,7 @@
 #include "stdafx.h"
 #include "WinLogger.h"
 
+WinLogger* WinLogger::m_winLog = NULL;
 ////////////////////////////////////////////////////////////////////////
 // Name:       WinLogger::WinLogger()
 // Purpose:    Implementation of WinLogger::WinLogger()
@@ -329,4 +330,40 @@ void WinLogger::AddLine(void)
 		InvalidateRect(m_hWnd, NULL, true);
 	}
 	return;
+}
+
+////////////////////////////////////////////////////////////////////////
+// Name:       WinLogger::getInstance(const TCHAR pOutputFilename, HINSTANCE hInstance)
+// Purpose:    Implementation of WinLogger::getInstance()
+// Parameters:
+// - pOutputFilename
+// - hInstance
+// Return:     WinLogger*
+////////////////////////////////////////////////////////////////////////
+
+WinLogger* WinLogger::getInstance(const TCHAR* pOutputFilename, HINSTANCE hInstance)
+{
+	// TODO : implement
+	if (NULL == m_winLog)
+	{
+		// º”À¯
+		if (NULL == m_winLog)
+		{
+			m_winLog = new WinLogger();
+			m_winLog->Init(pOutputFilename, hInstance);
+		}
+		//  Õ∑≈À¯
+	}
+	return m_winLog;
+}
+
+////////////////////////////////////////////////////////////////////////
+// Name:       WinLogger::getInstance()
+// Purpose:    Implementation of WinLogger::getInstance()
+// Return:     WinLogger*
+////////////////////////////////////////////////////////////////////////
+
+WinLogger* WinLogger::getInstance(void)
+{
+	return m_winLog;
 }
