@@ -10,6 +10,7 @@
 #include "FaceDetect.h"
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 using namespace cv;
 ////////////////////////////////////////////////////////////////////////
@@ -102,13 +103,37 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 			cap.read(frame);
 			if (frame.empty())
 				continue;
+			// 人脸检测
 			mDetect.detect(frame, rcFaces);
+
+			// 如果人脸矩形集合大小为0，则表示没有识别到人脸
+			// 如果检测到人脸，那么在GUI上将矩形绘制出来
+			if (rcFaces.size() <= 0)
+			{
+				// Todo
+			}
+			else
+			{
+				for (int i = 0; i < rcFaces.size(); i++)
+				{
+					Point center((rcFaces[i].left + rcFaces[i].right)*0.5, 
+						(rcFaces[i].top + rcFaces[i].bottom)*0.5);
+					ellipse(frame, center, Size((rcFaces[i].right  - rcFaces[i].left)*0.5, 
+						(rcFaces[i].bottom - rcFaces[i].top)*0.5), 0, 0, 360, Scalar(255, 0, 255), 4, 8, 0);
+				}
+			}
 			imshow(capWndName, frame);
+
 			char c = waitKey(10) & 0xFF;
 			if (c == ' ')
-				
-			if (c == 'q' || c == 'Q' || c == 27)
+			{
+
+			}
+			else if (c == 'q' || c == 'Q' || c == 27)
+			{
+				destroyWindow(capWndName);
 				break;
+			}
 		}
 	}
 }

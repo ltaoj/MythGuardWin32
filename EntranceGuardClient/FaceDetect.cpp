@@ -170,8 +170,9 @@ bool FaceDetect::destroy(void)
 		WinLogger::getInstance()->writelog(_T("ERROR!Engine release failed"));
 		return FALSE;
 	}
+	// 当成员变量是指针类型时，需要显示释放内存，bug date：2018年2月1日23:30:59
 	free(pWorkMem);
-	free(offInput.ppu8Plane[0]);
+	//free(offInput.ppu8Plane[0]);
 	WinLogger::getInstance()->writelog(_T("Engine release success"));
 	return TRUE;
 }
