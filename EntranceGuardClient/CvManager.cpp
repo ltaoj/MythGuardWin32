@@ -7,6 +7,7 @@
 
 #include "stdafx.h"
 #include "CvManager.h"
+#include "FaceDetect.h"
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
 
@@ -32,6 +33,8 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 	Mat					frame;						// 记录直接捕获的每一帧
 	Mat					result;						// 人脸识别、追踪处理过的画面帧
 	String				capWndName;					// 视频捕获窗口名称
+	FaceDetect			mDetect;					// 人脸识别类
+	vector<RECT>		rcFaces;					// 人脸矩形
    // TODO : implement
 	switch (id)
 	{
@@ -87,17 +90,19 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 		winLog->writelog(_T("Video Camera - Width: %x, Height: %x"),
 			cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT));
 
-		winLog->writelog(_T("开始捕获摄像头"));
-		winLog->writelog(_T("点击菜单Release选项终止捕获"));
+		winLog->writelog(_T("Start Grab"));
+		winLog->writelog(_T("Click MenuItem \"Release\" to Stop Grab"));
 		
 		capWndName = "门禁摄像头捕获画面";
+		mDetect.init(16, 10);
+		rcFaces.reserve(10);
 		while (1)
 		{
 			// 读取帧
 			cap.read(frame);
 			if (frame.empty())
 				continue;
-
+			mDetect.detect(frame, rcFaces);
 			imshow(capWndName, frame);
 			char c = waitKey(10) & 0xFF;
 			if (c == ' ')
