@@ -8,17 +8,20 @@
 #ifndef _FACEDETECT_
 #define _FACEDETECT_
 
-class Mat;
+#include "fd/arcsoft_fsdk_face_detection.h"
+#include "fd/merror.h"
+#include <opencv2/core/core.hpp>
 
-#include "fd\arcsoft_fsdk_face_detection.h"
-#include "fd\merror.h"
+typedef vector<RECT> VRECT;
+
+using namespace cv;
 
 class FaceDetect
 {
 public:
    FaceDetect();
    ~FaceDetect();
-   void detect(Mat & imgData, vector<RECT> & rcFace);
+   void detect(Mat & imgData, VRECT & rcFace);
    bool convertFromMat(Mat & matData, LPASVLOFFSCREEN offInput);
    bool init(MInt32 nScale, MInt32 nMaxFace);
 
@@ -30,7 +33,6 @@ private:
    MHandle hEngine;
    MByte * pWorkMem;
    ASVLOFFSCREEN offInput;
-
 };
 
 #endif
