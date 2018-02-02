@@ -163,16 +163,20 @@ bool FaceDetect::init(MInt32 nScale, MInt32 nMaxFace)
 
 bool FaceDetect::destroy(void)
 {
-	// 释放内存和引擎
-	nRet = AFD_FSDK_UninitialFaceEngine(hEngine);
-	if (nRet != MOK)
+	// 只声明对象，而没有调用init()进行初始化的实例不用释放内存和引擎
+	if (NULL != hEngine)
 	{
-		WinLogger::getInstance()->writelog(_T("ERROR!Engine release failed"));
-		return FALSE;
+		// 释放内存和引擎
+		nRet = AFD_FSDK_UninitialFaceEngine(hEngine);
+		if (nRet != MOK)
+		{
+			WinLogger::getInstance()->writelog(_T("ERROR!Engine release failed"));
+			return FALSE;
+		}
+		// 当成员变量是指针类型时，需要显示释放内存，bug date：2018年2月1日23:30:59
+		free(pWorkMem);
+		//free(offInput.ppu8Plane[0]);
+		WinLogger::getInstance()->writelog(_T("Engine release success"));
 	}
-	// 当成员变量是指针类型时，需要显示释放内存，bug date：2018年2月1日23:30:59
-	free(pWorkMem);
-	//free(offInput.ppu8Plane[0]);
-	WinLogger::getInstance()->writelog(_T("Engine release success"));
 	return TRUE;
 }
