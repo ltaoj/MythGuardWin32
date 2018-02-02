@@ -103,6 +103,11 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 			cap.read(frame);
 			if (frame.empty())
 				continue;
+
+			// 每次重新读取帧后拷贝原始图像矩阵
+			// 最终显示的都是result实例对象
+			result = frame.clone();
+			rcFaces.clear();
 			// 人脸检测
 			mDetect.detect(frame, rcFaces);
 
@@ -114,15 +119,19 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 			}
 			else
 			{
+				// 识别到人脸后
+				// 1. 将多个人脸图像在屏幕上分别绘制
+				// 2. 人脸姿态优选（最大脸，角度）
+				// 3. 
 				for (int i = 0; i < rcFaces.size(); i++)
 				{
 					Point center((rcFaces[i].left + rcFaces[i].right)*0.5, 
 						(rcFaces[i].top + rcFaces[i].bottom)*0.5);
-					ellipse(frame, center, Size((rcFaces[i].right  - rcFaces[i].left)*0.5, 
-						(rcFaces[i].bottom - rcFaces[i].top)*0.5), 0, 0, 360, Scalar(255, 0, 255), 4, 8, 0);
+					ellipse(result, center, Size((rcFaces[i].right  - rcFaces[i].left)*0.5, 
+						(rcFaces[i].bottom - rcFaces[i].top)*0.5), 0, 0, 360, Scalar(0, 255, 0), 4, 8, 0);
 				}
 			}
-			imshow(capWndName, frame);
+			imshow(capWndName, result);
 
 			char c = waitKey(10) & 0xFF;
 			if (c == ' ')
