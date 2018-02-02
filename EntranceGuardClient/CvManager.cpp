@@ -26,6 +26,7 @@ using namespace cv;
 
 void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNotify)
 {
+	static BOOL			bRun = TRUE;
 	BOOL				bSuccess = FALSE;
 	HINSTANCE			hInst = NULL;
 	TCHAR				*szStringOne = NULL;		// Two scratch strings
@@ -33,7 +34,7 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 	VideoCapture		cap;
 	Mat					frame;						// 记录直接捕获的每一帧
 	Mat					result;						// 人脸识别、追踪处理过的画面帧
-	String				capWndName;					// 视频捕获窗口名称
+	static String		capWndName;					// 视频捕获窗口名称
 	FaceDetect			mDetect;					// 人脸识别类
 	vector<RECT>		rcFaces;					// 人脸矩形
    // TODO : implement
@@ -56,8 +57,6 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 		memset(szStringOne, 0, MAX_PATH * sizeof(szStringOne[0]));
 		memset(szStringTwo, 0, MAX_PATH * sizeof(szStringTwo[0]));
 		hInst = reinterpret_cast <HINSTANCE> (GetWindowLongPtr(hWnd, GWLP_HINSTANCE));
-		LoadString(hInst, IDC_VFW4_CAPWINCLASS, szStringOne, MAX_PATH);
-		LoadString(hInst, IDS_CAP_WINDOW_TITLE, szStringTwo, MAX_PATH);
 
 		// 列举可用的设备驱动
 		// If there are other Vfw drivers, you'll see them, but modern Windows typically only has the MSVfw mapper
@@ -88,6 +87,17 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 			winLog->writelog(_T(""));
 			break;
 		}
+
+		// Enable menu items for this device
+		EnableMenuItem(GetMenu(hWnd), ID_CAP_CAPTURE, MF_ENABLED);
+		EnableMenuItem(GetMenu(hWnd), ID_CAP_CAPTURE_FRAME, MF_ENABLED);
+
+		EnableMenuItem(GetMenu(hWnd), ID_VIDEO_GETCAPABILITIES, MF_ENABLED);
+		EnableMenuItem(GetMenu(hWnd), ID_CAP_GET_STATUS, MF_ENABLED);
+		EnableMenuItem(GetMenu(hWnd), ID_CAP_GET_PARAMETERS, MF_ENABLED);
+
+		EnableMenuItem(GetMenu(hWnd), ID_CAP_COMPRESSION, MF_ENABLED);
+
 		winLog->writelog(_T("Video Camera - Width: %x, Height: %x"),
 			cap.get(CAP_PROP_FRAME_WIDTH), cap.get(CAP_PROP_FRAME_HEIGHT));
 
@@ -97,7 +107,8 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 		capWndName = "门禁摄像头捕获画面";
 		mDetect.init(16, 10);
 		rcFaces.reserve(10);
-		while (1)
+		bRun = TRUE;
+		while (bRun)
 		{
 			// 读取帧
 			cap.read(frame);
@@ -131,6 +142,7 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 						(rcFaces[i].bottom - rcFaces[i].top)*0.5), 0, 0, 360, Scalar(0, 255, 0), 4, 8, 0);
 				}
 			}
+			result.size();
 			imshow(capWndName, result);
 
 			char c = waitKey(10) & 0xFF;
@@ -144,5 +156,9 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 				break;
 			}
 		}
+		break;
+	case ID_CAP_RELEASE:
+		bRun = FALSE;
+		destroyWindow(capWndName);
 	}
 }
