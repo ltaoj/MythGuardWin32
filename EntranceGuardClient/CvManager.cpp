@@ -34,6 +34,7 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 	VideoCapture		cap;
 	Mat					frame;						// 记录直接捕获的每一帧
 	Mat					result;						// 人脸识别、追踪处理过的画面帧
+	Mat					dist;						// 保存到磁盘上的帧画面
 	static String		capWndName;					// 视频捕获窗口名称
 	FaceDetect			mDetect;					// 人脸识别类
 	vector<RECT>		rcFaces;					// 人脸矩形
@@ -126,14 +127,14 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 			// 如果检测到人脸，那么在GUI上将矩形绘制出来
 			if (rcFaces.size() <= 0)
 			{
-				// Todo
+				imshow(capWndName, frame);
 			}
 			else
 			{
 				// 识别到人脸后
 				// 1. 将多个人脸图像在屏幕上分别绘制
 				// 2. 人脸姿态优选（最大脸，角度）
-				// 3. 
+				// 3. 将选择的人脸截图保存图片
 				for (int i = 0; i < rcFaces.size(); i++)
 				{
 					Point center((rcFaces[i].left + rcFaces[i].right)*0.5, 
@@ -141,9 +142,27 @@ void CvManager::Cls_OnVideoCommand(HWND hWnd, int id, HWND hwndCtl, UINT codeNot
 					ellipse(result, center, Size((rcFaces[i].right  - rcFaces[i].left)*0.5, 
 						(rcFaces[i].bottom - rcFaces[i].top)*0.5), 0, 0, 360, Scalar(0, 255, 0), 4, 8, 0);
 				}
+				imshow(capWndName, result);
+
+				double maxFace = 0;
+				int index = 0;
+				for (int i = 0; i < rcFaces.size(); i++)
+				{
+					double areaFace = (rcFaces[i].right - rcFaces[i].left) * 
+						(rcFaces[i].bottom - rcFaces[i].top);
+					if (areaFace >maxFace)
+					{
+						maxFace = areaFace;
+						index = i;
+					}
+				}
+
+				dist = frame(Rect(rcFaces[index].left, rcFaces[index].top,
+					(rcFaces[index].right - rcFaces[index].left), (rcFaces[index].bottom - rcFaces[index].top)));
+				imwrite("dist.jpg", dist);
 			}
-			result.size();
-			imshow(capWndName, result);
+
+			// imshow(capWndName, result);
 
 			char c = waitKey(10) & 0xFF;
 			if (c == ' ')
